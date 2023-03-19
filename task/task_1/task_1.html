@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../style.css">
+	<title>Task 1</title>
+</head>
+
+<body>
+	<script>
+		//наповнемо даний масив значеннями
+		function getRandomNumber(minValue,maxValue) {
+			return minValue + Math.floor(Math.random() * (maxValue - minValue +1))
+		}
+		function makeArray(arrayLength, minValue, maxValue) {
+			const arr = []
+			for (let i = 0; i < arrayLength; i++) {
+				const randomNumber = getRandomNumber(minValue, maxValue)
+				arr.push(randomNumber)
+			}
+			return arr
+		}
+		function makeTable(rowsNumber, columsNumber, minValue, maxValue) {
+			const table = []
+			for (let i = 0; i < rowsNumber; i++) {
+				const row = makeArray(columsNumber,minValue,maxValue)
+				table.push(row)
+			}
+			return table
+		}
+		const mainArray = makeTable(2, 4, 1, 50)
+		console.log(mainArray)
+		//
+		function getSumOdd(arr,index) {
+			let sum = 0
+			for (let i = 0; i < 2; i++) {
+				sum+=arr[index][i]
+			}
+			return sum
+		}
+		//
+		function getSumEven(arr,index) {
+			let sum = 0
+			for (let i = 2; i < 4; i++) {
+				sum+=arr[index][i]
+			}
+			return sum
+		}
+		//1.Знаходимо суму елементів mainArray[0][0,1]
+		const sumOne = getSumOdd(mainArray, 0)
+		document.write(`<p>Сума у області 1: <span>${sumOne}</span>.</p>`)
+		//2.Знаходимо суму елементів mainArray[0][2,3]
+		const sumTwo = getSumEven(mainArray, 0)
+		document.write(`<p>Сума у області 2: <span>${sumTwo}</span>.</p>`)
+		//3.Знаходимо суму елементів mainArray[1][0,1]
+		const sumThree = getSumOdd(mainArray, 1)
+		document.write(`<p>Сума у області 3: <span>${sumThree}</span>.</p>`)
+		//4.Знаходимо суму елементів mainArray[1][2,3]
+		const sumFour = getSumEven(mainArray, 1)
+		document.write(`<p>Сума у області 4: <span>${sumFour}</span>.</p>`)
+		//5.сума парних рядків
+		let sumEvenRow = mainArray.reduce(
+			(prevSumm,row, index, baseArr) => index%2 === 0 ? row.reduce((prevSummCol, element)=>prevSummCol+element) : prevSumm 
+		,0)
+		document.write(`<p>Сума парних рядків: <span>${sumEvenRow}</span>.</p>`)
+		//6.сума непарних стовпців
+		function getsumOddColumn(array) {
+			let sum = 0
+			for (let i = 0; i < array.length; i++) {
+				for (let j = 0; j < array[i].length; j++) {
+					if (j%2 === 0) sum+=array[i][j]
+				}
+			}
+			return sum
+		}
+		const sumOddColumn = getsumOddColumn(mainArray)
+		document.write(`<p>Сума непарних стовпців: <span>${sumOddColumn}</span>.</p>`)
+		//7.сума парних рядках – непарні стовпці
+		const sumEvenRowOddColumn = mainArray.reduce(
+			(prevSumm, row, index, baseArr) => index%2 === 0 ? row.reduce(
+				(prevSumSum,el,indexSecond) => indexSecond%2 !== 0 ? el+=prevSumSum : prevSumSum, 0
+			) : prevSumm 
+		,0)
+		document.write(`<p>Сума парних рядках – непарні стовпці: <span>${sumEvenRowOddColumn}</span>.</p>`)
+		//непарні рядки – парні стовпці
+		const sumOddRowEvenColumn = mainArray.reduce(
+			(previoustSum, row, index, baseArr) => index%2 !== 0 ? row.reduce(
+				(previoustSumm, el, indexSecond) => indexSecond%2 === 0 ? el+=previoustSumm : previoustSumm, 0
+			) : previoustSum
+		,0)
+		document.write(`<p>Сума непарні рядки – парні стовпці: <span>${sumOddRowEvenColumn}</span>.</p>`)
+	</script>
+</body>
+</html>

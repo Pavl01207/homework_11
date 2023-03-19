@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Task 2</title>
+</head>
+
+<body>
+	<script>
+		//Дано інформацію про прибуток К магазинів протягом тижня.
+		//отримуємо від користувача кількість тижнів(К)
+		const numberMagazine = parseInt(prompt('Введіть кількість магазинів'))
+		function getRandomNumber(minValue,maxValue) {
+			return minValue + Math.floor(Math.random() * (maxValue - minValue +1))
+		}
+		//масив прибутку за тиждень
+		function makeWeekProfit(arrayLength, minValue, maxValue) {
+			const arr = []
+			for (let i = 0; i < arrayLength; i++) {
+				const dayProfit = getRandomNumber(minValue, maxValue)
+				arr.push(dayProfit)
+			}
+			return arr
+		}
+		//масив із тижневого прибутку К магазинів
+		function makeProfitMagazine(number, daysWeek, minValue, maxValue) {
+			const arr = []
+			for (let i = 0; i < number; i++) {
+				const week = makeWeekProfit(daysWeek, minValue, maxValue)
+				arr.push(week)
+			}
+			return arr
+		}
+		const profitWeekOfMagazines = makeProfitMagazine(numberMagazine, 7, 100, 500)
+		console.log(profitWeekOfMagazines)
+		//Знайти:
+		//1.загальний прибуток кожного масиву за тиждень
+		function getSumWeek(arr,index) {
+			let sum = 0
+			for (let i = 0; i < 7; i++) {
+				sum+=arr[index][i]
+			}
+			return sum
+		}
+		for (let i = 0; i < numberMagazine; i++) {
+			let profit = getSumWeek(profitWeekOfMagazines, i)
+			document.write(`<p>Прибуток <span>${i+1}</span> магазину за тиждень: <span>${profit}</span> грн.</p>`)
+		}
+		//2.загальний прибуток усіх магазинів по дням (загальний прибуток усіх магазинів за понеділок, за вівторок, і т.д.);
+		function getDayProfit(arr,index, number) {
+			let sum = 0
+			for (let i = 0; i < number; i++) {
+				sum+=arr[i][index]
+			}
+			return sum
+		}
+		function getNameDay(number){
+			switch(number) {
+				case 0 : return 'понеділок'
+				case 1 : return 'вівторок'
+				case 2 : return 'середу'
+				case 3 : return 'четвер'
+				case 4 : return 'п\'ятницю'
+				case 5 : return 'суботу'
+				case 6 : return 'неділю'
+			}
+		}
+		for (let i = 0; i < 7; i++) {
+			let profit = getDayProfit(profitWeekOfMagazines, i, numberMagazine)
+			let day = getNameDay(i)
+			document.write(`<p>Прибуток магазинів за <span>${day}</span>: <span>${profit}</span> грн.</p>`)
+		}
+		//3.загальний прибуток за робочі дні
+		function getDaysProfit(arr,startindex, endindex, number) {
+			let sum = 0
+			for (let i = 0; i < number; i++) {
+				for (let j = startindex; j < endindex; j++) {
+					sum+=arr[i][j]
+				}
+			} 
+			return sum
+		}
+		const workDayProfit = getDaysProfit(profitWeekOfMagazines, 0, 5, numberMagazine)
+		document.write(`<p>Прибуток магазинів за <span>робочі</span> дні: <span>${workDayProfit}</span> грн.</p>`)
+		//4.загальний прибуток за вихідні дні
+		const restDayProfit = getDaysProfit(profitWeekOfMagazines, 5, 6, numberMagazine)
+		document.write(`<p>Прибуток магазинів за <span>вихідні</span> дні: <span>${restDayProfit}</span> грн.</p>`)
+		//5.максимальний прибуток за середу
+		function getSomeDayOfWeek(arr, number, index) {
+			let array = []
+			for(let i = 0; i < number;i++) {
+				array.push(arr[i][index])
+			}
+			return array
+		}
+		const wednesday = getSomeDayOfWeek(profitWeekOfMagazines, numberMagazine, 2)
+		function getMaxProfit(arr) {
+			return Math.max(...arr)
+		}
+		const wednesdayMax = getMaxProfit(wednesday)
+		document.write(`<p>Максимальний прибуток за <span>середу</span>: <span>${wednesdayMax}</span> грн.</p>`)
+		//6.сформувати загальний список (одновимірний масив) зі значенням, які що більші за 200
+		function getProfitGreater_200(arr) {
+			let array = []
+			for (let i = 0; i < arr.length; i++) {
+				for (let j = 0; j < arr[i].length; j++) {
+					let element = arr[i][j]
+					if (element>200) array.push(element)
+				}
+			}
+			return array
+		}
+		const arrayWithProfitGreater_200 = getProfitGreater_200(profitWeekOfMagazines)
+		console.log(arrayWithProfitGreater_200)
+		//7.відсортувати кожен тиждень за зростанням
+		function getArrayWithWeekProfit(arr){
+			let arrayWeek = []
+			for (let i = 0; i < arr.length; i++) {
+				let sum = 0
+				for (let j = 0; j < arr[i].length; j++) {
+					sum+=arr[i][j]
+				}
+				arrayWeek.push(sum)
+			}
+			return arrayWeek
+		}
+		const arrayWithWeekSum = getArrayWithWeekProfit(profitWeekOfMagazines)
+		arrayWithWeekSum.sort(
+			(element1,element2) => {
+				if (element1>element2) return 1
+				if (element1<element2) return -1
+				return 0
+			}
+		)
+		console.log(arrayWithWeekSum)
+		/*8.відсортувати тижні (рядки) за спаданням максимального елементи у цьому тижні (рядку),
+		тобто при порівнянні рядків потрібно порівнювати максимальні елементи у кожному з цих рядків*/
+		function getSortWeek (arr) {
+			for (let i = 0; i < arr.length; i++) {
+				arr[i].sort((el1,el2) => {return el2 - el1})
+			}
+			return arr
+		}
+		const sortWeek = getSortWeek(profitWeekOfMagazines)
+		console.log(sortWeek)
+		/*9.упорядкувати тижні (рядки) за спаданням суми елементів у рядку 
+		(тобто при порівнянні двох рядків треба знайти суму кожного з рядків і порівнювати ці суми, 
+		на основі цих сум буде зрозуміло, який з елементів повинен іти раніше).*/
+		function getWeekSumm(arr) {
+			let sortArr = []
+			for(let i = 0; i < arr.length; i++) {
+				let summ = arr[i].reduce(
+					(prevSum,element) => element+=prevSum
+				,0)
+				sortArr.push(summ)
+			}
+			sortArr.sort((el1, el2) => {return el2 - el1})
+			return sortArr
+		}
+		const arrayWithSum = getWeekSumm(profitWeekOfMagazines)
+		console.log(arrayWithSum)
+	</script>
+</body>
+</html>

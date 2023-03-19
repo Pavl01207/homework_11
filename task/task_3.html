@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Task 3</title>
+</head>
+
+<body>
+	<script>
+		/*Морський бій. Випадковим чином на двовимірному полі розміром 6*6 розташовується 5 кораблів. 
+		Користувач стріляє вказуючи координати. Гра продовжується поки не потоплено усі кораблі
+		або у користувача не закінчаться снаряди.*/
+		//створюємо двовимірний масив 6*6 заповнений нулями
+		function makeArray(number) {
+			let arr = []
+			for(let i = 0; i < number; i++){
+				let cell = 0
+				arr.push(cell)
+			}
+			return arr
+		}
+		function makeTableField(rowsNumber,columnsNumber) {
+			let table = []
+			for(let i = 0; i < rowsNumber; i++) {
+				let row = makeArray(columnsNumber)
+				table.push(row)
+			}
+			return table
+		}
+		const gameField = makeTableField(6,6)
+		//заповнюємо рандомних 5 клітинок кораблями(одиницями)
+		function makeRandomNumber(minV, maxV) {
+			return minV + Math.floor(Math.random() * (maxV - minV +1))
+		}
+		function putShips(number,arr, minV, maxV) {
+			for(let i = 0; i < number; i++) {
+				let coordX = makeRandomNumber(minV, maxV)
+				let coordY = makeRandomNumber(minV, maxV)
+				arr[coordX][coordY] = 1
+			}
+			return arr
+		}
+		const gameFieldWithShip = putShips(5, gameField, 0, 5)
+		//користувач робить вистріл
+		const USER_SHOTS = 7 //нехай кількість вистрілів буде обмежена до 7
+		function makeUserShot(arr,numbershots) {
+			let hitShot = 0
+			for (let shot = 0; shot <numbershots; shot++) {
+			const userCoordX = parseInt(prompt(`Постріл №${shot+1}\nКоординати по Х від 1 до 6`))
+			const userCoordY = parseInt(prompt(`Постріл №${shot+1}\nКоординати по Y від 1 до 6`))
+			if (arr[userCoordX-1][userCoordY-1] === 1 ) {
+				alert('Ви влучили в корабель!')
+				hitShot++
+			}
+			else {
+				alert('Промах!')
+				continue
+			}
+		}
+		return hitShot
+	}
+	let result = makeUserShot(gameFieldWithShip, USER_SHOTS)
+	document.write(`<p>Влучних попадань по кораблю: <span>${result}</span>.</p>`)
+	</script>
+</body>
+</html>
